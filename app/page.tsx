@@ -65,13 +65,21 @@ export default function GenealogyApp() {
     setTree(copy);
   };
 
-  const updateSelected = (field: keyof TreeNode, value: string) => {
-    if (!selected) return;
-    const copy = JSON.parse(JSON.stringify(tree));
-    const update = (n: TreeNode) => { if (n.id === selected.id) n[field] = value; else n.children.forEach(update); };
-    update(copy);
-    setTree(copy);
+const updateSelected = (field: 'name' | 'birth' | 'photo', value: string) => {
+  if (!selected) return;
+  const copy = JSON.parse(JSON.stringify(tree));
+  const update = (n: TreeNode) => {
+    if (n.id === selected.id) {
+      if (field === 'name') n.name = value;
+      if (field === 'birth') n.birth = value;
+      if (field === 'photo') n.photo = value;
+    } else {
+      n.children.forEach(update);
+    }
   };
+  update(copy);
+  setTree(copy);
+};
 
   const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
     e.preventDefault();
